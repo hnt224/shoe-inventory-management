@@ -1,3 +1,5 @@
+eslint-disable @typescript-eslint/no-unused-vars
+
 import { useRef } from "react";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
@@ -26,16 +28,13 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 /* REDUX PERSISTENCE */
 const createNoopStorage = () => {
   return {
-    getItem(_unusedKey: string): Promise<null> {
-      // Renamed `_key` to `_unusedKey` and specified `string` type
+    getItem(): Promise<null> {
       return Promise.resolve(null);
     },
-    setItem(_unusedKey: string, value: unknown): Promise<unknown> {
-      // Specified `unknown` type for `value`
+    setItem(value: unknown): Promise<unknown> {
       return Promise.resolve(value);
     },
-    removeItem(_unusedKey: string): Promise<void> {
-      // Specified `void` return type
+    removeItem(): Promise<void> {
       return Promise.resolve();
     },
   };
