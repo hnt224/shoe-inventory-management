@@ -33,13 +33,13 @@ const Inventory = () => {
   const { data: products, isError, isLoading } = useGetProductsQuery();
 
   if (isLoading) {
-    return <div className="py-4"> Loading...</div>;
+    return <div className="py-4">Loading...</div>;
   }
 
   if (isError || !products) {
     return (
       <div className="text-center text-red-500 py-4">
-        Failed to fetch products.
+        Failed to fetch products
       </div>
     );
   }

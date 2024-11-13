@@ -86,7 +86,7 @@ const Sidebar = () => {
             isSidebarCollapsed ? "hidden" : "block"
           } font-extrabold text-2xl`}
         >
-          Stepify
+          STEPIFY
         </h1>
 
         <button
