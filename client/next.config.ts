@@ -1,14 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  images:{
-    remotePatterns:[
+  images: {
+    remotePatterns: [
       {
         protocol: "https",
-        hostname: "https://s3-shoe-inventory-management.s3.us-east-2.amazonaws.com",
-        port:"",
-        pathname: "/**",
+        hostname: "s3-shoe-inventory-management.s3.us-east-2.amazonaws.com",  // Remove 'https://' from hostname
+        port: "",  // Default port is fine
+        pathname: "/**",  // This will match all paths within the S3 bucket
       }
     ]
   }
