@@ -72,13 +72,13 @@ export const api = createApi({
       }),
       providesTags: ["Products"],
     }),
-    createProduct: build.mutation<Product, NewProduct>({ 
+    createProduct: build.mutation<Product, NewProduct>({
       query: (newProduct) => ({
         url: "/products",
         method: "POST",
         body: newProduct,
       }),
-      invalidatesTags: ["Products"], //update list of product by getting an auto api call 
+      invalidatesTags: ["Products"],
     }),
     getUsers: build.query<User[], void>({
       query: () => "/users",
@@ -91,7 +91,6 @@ export const api = createApi({
   }),
 });
 
-//hooks
 export const {
   useGetDashboardMetricsQuery,
   useGetProductsQuery,
