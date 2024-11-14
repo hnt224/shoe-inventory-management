@@ -1,5 +1,7 @@
+// Enable Next.js Client Component mode
 "use client";
 
+// Import necessary components and hooks for expenses data fetching and chart rendering
 import {
   ExpenseByCategorySummary,
   useGetExpensesByCategoryQuery,
@@ -15,37 +17,47 @@ import {
   Tooltip,
 } from "recharts";
 
+// Define a type for each item in the aggregated data, including optional color for the chart
 type AggregatedDataItem = {
   name: string;
   color?: string;
   amount: number;
 };
 
+// Define a type for storing aggregated data by category
 type AggregatedData = {
   [category: string]: AggregatedDataItem;
 };
 
+// Define the Expenses component
 const Expenses = () => {
+  // State for managing active pie slice index, selected category, start and end dates for filtering
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  // Fetch expenses data and set loading and error states
   const {
     data: expensesData,
     isLoading,
     isError,
   } = useGetExpensesByCategoryQuery();
+
+  // Memoized value for expenses data to avoid unnecessary re-computations
   const expenses = useMemo(() => expensesData ?? [], [expensesData]);
 
+  // Helper function to parse a date string in "YYYY-MM-DD" format
   const parseDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toISOString().split("T")[0];
   };
 
+  // Aggregate data based on category, with optional filtering by selected category and date range
   const aggregatedData: AggregatedDataItem[] = useMemo(() => {
     const filtered: AggregatedData = expenses
       .filter((data: ExpenseByCategorySummary) => {
+        // Filter by selected category and date range
         const matchesCategory =
           selectedCategory === "All" || data.category === selectedCategory;
         const dataDate = parseDate(data.date);
@@ -56,12 +68,13 @@ const Expenses = () => {
         return matchesCategory && matchesDate;
       })
       .reduce((acc: AggregatedData, data: ExpenseByCategorySummary) => {
+        // Aggregate data by category, adding unique colors to each category
         const amount = parseInt(data.amount);
         if (!acc[data.category]) {
           acc[data.category] = { name: data.category, amount: 0 };
           acc[data.category].color = `#${Math.floor(
             Math.random() * 16777215
-          ).toString(16)}`;
+          ).toString(16)}`; // Assign random color for chart
           acc[data.category].amount += amount;
         }
         return acc;
@@ -70,16 +83,19 @@ const Expenses = () => {
     return Object.values(filtered);
   }, [expenses, selectedCategory, startDate, endDate]);
 
+  // CSS classes for form styling
   const classNames = {
     label: "block text-sm font-medium text-gray-700",
     selectInput:
       "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md",
   };
 
+  // Display loading message if data is still being fetched
   if (isLoading) {
     return <div className="py-4">Loading...</div>;
   }
 
+  // Display error message if there's an error fetching data
   if (isError || !expensesData) {
     return (
       <div className="text-center text-red-500 py-4">
@@ -105,7 +121,7 @@ const Expenses = () => {
             Filter by Category and Date
           </h3>
           <div className="space-y-4">
-            {/* CATEGORY */}
+            {/* CATEGORY FILTER */}
             <div>
               <label htmlFor="category" className={classNames.label}>
                 Category
@@ -123,7 +139,7 @@ const Expenses = () => {
                 <option>Salaries</option>
               </select>
             </div>
-            {/* START DATE */}
+            {/* START DATE FILTER */}
             <div>
               <label htmlFor="start-date" className={classNames.label}>
                 Start Date
@@ -136,7 +152,7 @@ const Expenses = () => {
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
-            {/* END DATE */}
+            {/* END DATE FILTER */}
             <div>
               <label htmlFor="end-date" className={classNames.label}>
                 End Date
@@ -151,6 +167,7 @@ const Expenses = () => {
             </div>
           </div>
         </div>
+
         {/* PIE CHART */}
         <div className="flex-grow bg-white shadow rounded-lg p-4 md:p-6">
           <ResponsiveContainer width="100%" height={400}>
